@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.staticfiles',
+    'django.contrib.contenttypes',
+    'user',
 ]
 
 MIDDLEWARE = [
