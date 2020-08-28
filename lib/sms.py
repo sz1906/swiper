@@ -2,17 +2,21 @@ import random
 import json
 import http.client
 import urllib.parse
+from django.core.cache import cache
 
 from swiper import config
+from common import keys
 
 
 def gen_vcode(size=4):
     start = 10 ** (size-1)
     end = 10 ** size - 1
-    return random.randint(start, end)
+    return str(random.randint(start, end))
 
-def send_sms(phont):
-    code = gen_vcode()
+def send_sms(phone):
+    vcode = gen_vcode()
+    print(vcode)
+    cache.set(keys.VCODE_KEY % phone, vcode, timeout=120)
     result = {'code': 2, 'msg': '提交成功', 'smsid': '15984443354038494607'}
     if result['code'] == 2:
         return True, 'OK'
