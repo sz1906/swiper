@@ -2,10 +2,12 @@ import random
 import json
 import http.client
 import urllib.parse
+
 from django.core.cache import cache
 
 from swiper import config
 from common import keys
+from worker import celery_app
 
 
 def gen_vcode(size=4):
@@ -13,6 +15,8 @@ def gen_vcode(size=4):
     end = 10 ** size - 1
     return str(random.randint(start, end))
 
+
+@celery_app.task
 def send_sms(phone):
     vcode = gen_vcode()
     print(vcode)
@@ -23,7 +27,8 @@ def send_sms(phone):
     else:
         return False, result['msg']
 
-def send_sms_True(phone):
+
+def send_sms_true(phone):
     params = config.HY_PARAMS.copy()
     params['mobile'] = phone
     params['content'] = f'您的验证码是：{gen_vcode()}。请不要把验证码泄露给其他人。'

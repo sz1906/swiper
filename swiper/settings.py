@@ -127,3 +127,18 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 MEDIAS = 'medias'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/5",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PICKLE_VERSION": -1,
+        }
+    }
+}
+
+# 修改 session 的 存放位置
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+

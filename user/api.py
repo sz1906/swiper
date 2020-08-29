@@ -14,12 +14,7 @@ def submit_phone(request):
     """提交手机号码，发送验证码"""
     phone = request.POST.get('phone')
     # 发送验证码
-    status, msg = send_sms(phone)
-    if not status:
-        # return JsonResponse({'code': errors.SMS_ERROR, 'data': '短信发送失败'})
-        return render_json(code=errors.SMS_ERROR, data='短信发送失败')
-    # else:
-    #     return JsonResponse({'code': 0, 'data': None})
+    send_sms.delay(phone)
     return render_json()
 
 
@@ -59,6 +54,6 @@ def edit_profile(request):
 def upload_avatar(request):
     avatar = request.FILES.get('avatar')
     user = request.user
-    handle_upload(user, avatar)
+    handle_upload.delay(user, avatar)
     return render_json()
 
