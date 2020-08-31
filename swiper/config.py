@@ -16,3 +16,6 @@ QINIU_ACCESS_KEY = 'xhywYD6_uUzbHZY51rF-ewChRpkJyrWBey6xd8mW'
 QINIU_SECRET_KEY = 'M0H32x7iUnXtvcePvaUrj2ZlsFq5PesfVSuktOn_'
 QINIU_URL = 'http://qfs3um7g1.hn-bkt.clouddn.com/'
 
+# 最大反悔次数
+MAX_REWIND = 3
+

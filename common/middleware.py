@@ -4,6 +4,7 @@ from user.models import User
 from lib.http import render_json
 from common import errors
 
+
 class AuthMiddleware(MiddlewareMixin):
     def process_request(self, request):
         # 白名单安排，白名单内的地址，直接返回
@@ -20,3 +21,12 @@ class AuthMiddleware(MiddlewareMixin):
         # 如果已登录，则把 user 写入 request
         user = User.objects.get(id=uid)
         request.user = user
+
+
+class LogicErrorMiddleware(MiddlewareMixin):
+    def process_exception(self, request, exception):
+        # 只捕获逻辑错误
+        if isinstance(exception, errors.LogicError):
+            return render_json(exception.code, exception.data)
+        return None
+

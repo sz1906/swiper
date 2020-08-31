@@ -42,12 +42,15 @@ class User(models.Model):
         if not hasattr(self, '_profile'):
             key = keys.PROFILE_KEY % self.id
             self._profile = cache.get(key)
+
             if not self._profile:
                 # 缓存中没有，从数据库获取，并放入缓存
                 print('get profile from database')
                 self._profile, _ = Profile.objects.get_or_create(id=self.id)
                 cache.set(key, self._profile, timeout=86400 * 14)
+        # elif self._profile.to_dict()
         return self._profile
+
 
     def to_dict(self):
         return {

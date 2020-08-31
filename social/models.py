@@ -15,5 +15,39 @@ class Swiped(models.Model):
     class Meta:
         db_table = 'swiped'
 
+    @classmethod
+    def like(cls, uid, sid):
+        return cls.objects.create(uid=uid, sid=sid, mark='like')
+
+    @classmethod
+    def has_like(cls, uid, sid):
+        return cls.objects.filter(uid=sid, sid=uid).exists()
+
+    @classmethod
+    def dislike(cls, uid, sid):
+        return cls.objects.create(uid=uid, sid=sid, mark='dislike')
+
+    @classmethod
+    def superlike(cls, uid, sid):
+        return cls.objects.create(uid=uid, sid=sid, mark='supermark')
 
 
+class Friend(models.Model):
+    uid1 = models.IntegerField()
+    uid2 = models.IntegerField()
+
+    @classmethod
+    def make_friends(cls, uid1, uid2):
+        uid1, uid2 = (uid1, uid2) if uid1 < uid2 else (uid2, uid1)
+        friendship = cls.objects.create(uid1=uid1, uid2=uid2)
+        return friendship
+
+    @classmethod
+    def is_friend(cls, uid1, uid2):
+        uid1, uid2 = (uid1, uid2) if uid1 < uid2 else (uid2, uid1)
+        return Friend.objects.filter(uid1=uid1, uid2=uid2).exclude()
+
+    @classmethod
+    def delete_friend(cls, uid1, uid2):
+        uid1, uid2 = (uid1, uid2) if uid1 < uid2 else (uid2, uid1)
+        return Friend.objects.filter(uid1=uid1, uid2=uid2).delete()
