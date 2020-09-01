@@ -38,14 +38,19 @@ class User(models.Model):
     def profile(self):
         # 根据用户ID，找到对应profile
         # 第一次访问，就从数据库中获取profile；否则从缓存中获取
-        key = keys.PROFILE_KEY % self.id
-        profile = cache.get(key)
-        if not profile:
-            # 缓存中没有，从数据库获取，并放入缓存
-            print('get profile from database')
-            profile, _ = Profile.objects.get_or_create(id=self.id)
-            cache.set(key, profile, timeout=86400 * 14)
-        return profile
+        # 判断user本身是否有profile属性，有就返回，没有创建
+        if not hasattr(self, '_profile'):
+            key = keys.PROFILE_KEY % self.id
+            self._profile = cache.get(key)
+
+            if not self._profile:
+                # 缓存中没有，从数据库获取，并放入缓存
+                print('get profile from database')
+                self._profile, _ = Profile.objects.get_or_create(id=self.id)
+                cache.set(key, self._profile, timeout=86400 * 14)
+        # elif self._profile.to_dict()
+        return self._profile
+
 
     def to_dict(self):
         return {
